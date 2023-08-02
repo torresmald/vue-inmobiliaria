@@ -1,13 +1,17 @@
 <script setup>
 import { useField, useForm } from "vee-validate";
 import {loginSchema} from '../validation/loginSchema'
+import {useAuthStore} from '../stores/auth';
+
+const auth = useAuthStore();
 const { handleSubmit } = useForm({validationSchema: loginSchema});
 const email = useField("email");
 const password = useField("password");
 
-const submit = handleSubmit(() => {
-    console.log('submit');
+const submit = handleSubmit(({email, password}) => {
+    auth.login({email, password})
 });
+
 </script>
 
 <template>
@@ -15,6 +19,11 @@ const submit = handleSubmit(() => {
     <v-card-title primary-title class="text-h4 font-weight-bold">
       Iniciar Sesion
     </v-card-title>
+    <v-alert
+    type="error"
+    :title="auth.errorMsg"
+    v-if="auth.hasError"
+  ></v-alert>
     <v-form class="mt-5">
       <v-text-field
         name="email"
