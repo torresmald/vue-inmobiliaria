@@ -1,5 +1,7 @@
 <script setup>
 import { RouterView } from "vue-router";
+import { useAuthStore } from "./stores/auth";
+const auth = useAuthStore();
 </script>
 
 <template>
@@ -10,8 +12,14 @@ import { RouterView } from "vue-router";
           <v-btn to="/">Vue - Inmobiliaria</v-btn>
         </template>
         <template v-slot:append>
-          <v-btn to="/">Inicio</v-btn>
-          <v-btn to="/login">Login</v-btn>
+          <div v-if="auth.isLogged">
+            <v-btn to="/admin/casas">Admin Panel</v-btn>
+            <v-btn @click="auth.logout">Logout</v-btn>
+          </div>
+          <div v-else>
+            <v-btn to="/">Inicio</v-btn>
+            <v-btn to="/login">Iniciar Sesion</v-btn>
+          </div>
         </template>
       </v-app-bar>
       <v-main>
