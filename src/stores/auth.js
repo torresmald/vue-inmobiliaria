@@ -33,6 +33,9 @@ export const useAuthStore = defineStore('auth', () => {
             })
             .catch((error) => {
                 errorMsg.value = errorCodes[error.code];
+                setTimeout(() => {
+                    errorMsg.value = ''
+                }, 2000);
             })
     }
 

@@ -49,6 +49,7 @@ router.beforeEach(async (to, from, next) => {
   if (requireAuth) {
     try {
       await authenticateUser(next);
+      next()
     } catch (error) {
       console.log(error);
       next({name: 'login'});
@@ -64,7 +65,7 @@ const authenticateUser = (next) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       unsubscribe();
       if (user) {
-        resolve();
+        resolve(next);
       } else {
         reject(new Error('User not authenticated'));
       }
