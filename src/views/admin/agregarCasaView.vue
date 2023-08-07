@@ -4,11 +4,16 @@ import { useFirestore } from "vuefire";
 import { useForm, useField } from "vee-validate";
 import { validationSchema, imageSchema } from "@/validation/propiedadSchema";
 import { useRouter } from "vue-router";
-import useImage from '@/composables/useImage';
+import useImage from "@/composables/useImage";
+import useLocationMap from "@/composables/useLocationMap";
 
-const { uploadImage, isUploaded, url } = useImage()
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
-const router = useRouter()
+
+const { uploadImage, isUploaded, url } = useImage();
+const { zoom, center, pin } = useLocationMap()
+
+const router = useRouter();
 const rooms = [1, 2, 3, 4, 5];
 const wc = [1, 2, 3];
 const parkings = [1, 2];
@@ -28,20 +33,20 @@ const baños = useField("baños");
 const garajes = useField("garajes");
 const descripcion = useField("descripcion");
 const piscina = useField("piscina", null, {
-  initialValue: false
+  initialValue: false,
 });
 
-const db = useFirestore()
+const db = useFirestore();
 
 const submit = handleSubmit(async (values) => {
-
-  const {foto, ...casa} = values;
+  const { foto, ...casa } = values;
   const docRef = await addDoc(collection(db, "casas"), {
     ...casa,
-    foto: url.value
+    foto: url.value,
+    ubicacion: center.value
   });
-  if(docRef.id){
-    router.push('/admin/casas')
+  if (docRef.id) {
+    router.push("/admin/casas");
   }
 });
 </script>
@@ -70,7 +75,7 @@ const submit = handleSubmit(async (values) => {
       />
       <div v-if="isUploaded" class="my-5">
         <p class="font-weight-bold mb-2">Imagen de Casa</p>
-        <img :src="isUploaded" alt="Imagen Casa" class="w-50">
+        <img :src="isUploaded" alt="Imagen Casa" class="w-50" />
       </div>
       <v-text-field
         name="precio"
@@ -124,6 +129,17 @@ const submit = handleSubmit(async (values) => {
         v-model="piscina.value.value"
       >
       </v-checkbox>
+      <h2 class="font-weight-bold text-center my-5">Ubicación</h2>
+      <div class="pb-8">
+        <div style="height: 600px">
+          <LMap v-model:zoom="zoom" :center="center" :use-global-leaflet=false>
+            <LMarker :lat-lng="center" draggable @moveend="pin"/>
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ></LTileLayer>
+          </LMap>
+        </div>
+      </div>
       <v-btn color="blue" block height="50" @click="submit">Agregar</v-btn>
     </v-form>
   </v-card>
