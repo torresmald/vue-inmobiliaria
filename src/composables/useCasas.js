@@ -13,10 +13,6 @@ export default function useCasas(){
             currency: 'EUR'
         })
     };
-
-    const editarCasa = () => {
-        console.log('editando...');
-    }
  
     return {
         casasCollection,
