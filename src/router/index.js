@@ -39,6 +39,11 @@ const router = createRouter({
         },
       ]
     },
+    {
+      path: '/casa/:id',
+      name: 'casa',
+      component: () => import('../views/CasaView.vue')
+    }
 
   ]
 })

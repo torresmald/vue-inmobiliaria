@@ -53,9 +53,15 @@ watch(casa, (casa) => {
 });
 
 const submit = handleSubmit( async (values) => {
+  console.log(values);
   const {foto, ...casa} = values
-  if(url.value){
-
+  if(foto.value){
+    const data = {
+      ...casa,
+      foto: url.value,
+      ubicacion: center.value
+    }
+    await updateDoc(docRef, data, )
   } else {
     const data = {
       ...casa,

@@ -1,6 +1,7 @@
 <script setup>
 import useCasas from "../../composables/useCasas";
-const { casasCollection, formatPrice } = useCasas();
+import {formatPrice} from '@/helpers/index.js';
+const { casasCollection, deleteCasa } = useCasas();
 </script>
 
 <template>
@@ -24,7 +25,7 @@ const { casasCollection, formatPrice } = useCasas();
         </v-list-item-subtitle>
         <template v-slot:append>
           <v-btn color="info" flat class="mr-2" :to="{name: 'editar-casa', params: {id: casa.id}}">Editar</v-btn>
-          <v-btn color="red-darken-3" flat>Eliminar</v-btn>
+          <v-btn color="red-darken-3" flat @click="deleteCasa(casa.id, casa.foto)">Eliminar</v-btn>
 
         </template>
       </v-list-item>
